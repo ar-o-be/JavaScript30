@@ -104,6 +104,28 @@
   </div>
 
 <script>
+  let isShift = false; // whether or not the shift key is currently pressed
+  let lastCheckedElement = undefined; // last element that was 'checked' by user
+
+  // Toggle flags for shift key
+  document.addEventListener('keydown', e => isShift = e.shiftKey);
+  document.addEventListener('keyup', e => isShift = e.shiftKey);
+
+  // grab all the checkboxes on the page
+  const checkBoxes = Array.from(document.querySelectorAll('input[type="checkbox"]'));
+
+  checkBoxes.forEach(input => {
+    input.addEventListener('change', e => {
+      if (isShift) {
+        const i1 = checkBoxes.findIndex(c => c === lastCheckedElement);
+        const i2 = checkBoxes.findIndex(c => c === e.target);
+        const startSlice = Math.min(i1, i2) + 1;
+        const endSlice = Math.max(i1, i2);
+        checkBoxes.slice(startSlice, endSlice).forEach(check => check.checked = true);
+      }
+      lastCheckedElement = e.target;
+    });
+  });
 </script>
 </body>
 </html>
